@@ -1,22 +1,16 @@
-// ===========================================================================
-// js/contacts.js — list / add / edit / delete emergency contacts.
-// ---------------------------------------------------------------------------
-// Uses a single modal (popup) for BOTH adding and editing. When editing we
-// remember the contact id in `editingId`; when adding it stays null.
-// ===========================================================================
 
 let editingId = null; // null = adding new, otherwise = id we are editing
 
 document.addEventListener('DOMContentLoaded', () => {
   if (!requireAuth()) return;
 
-  // Grab the elements we will reuse.
+  //  elements we will reuse.
   const grid = document.getElementById('contactsGrid');
   const modal = document.getElementById('contactModal');
   const form = document.getElementById('contactForm');
   const modalTitle = document.getElementById('modalTitle');
 
-  // --- Open the modal for ADDING ---
+  // open modal
   document.getElementById('addBtn').addEventListener('click', () => {
     editingId = null;
     modalTitle.textContent = 'Add Contact';
@@ -24,14 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.classList.add('open');
   });
 
-  // --- Close the modal (Cancel button or clicking the dark backdrop) ---
+  //  Close the modal 
   document.getElementById('cancelBtn').addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => {
     if (e.target === modal) closeModal(); // only when clicking the overlay itself
   });
   function closeModal() { modal.classList.remove('open'); }
 
-  // --- Save (create or update) ---
+  //  Save 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const body = {
@@ -42,29 +36,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       if (editingId) {
-        // PUT /api/contacts/:id
+        // PUT 
         await apiFetch(`/contacts/${editingId}`, { method: 'PUT', body });
         toast('Contact updated.');
       } else {
-        // POST /api/contacts
+        // POST 
         await apiFetch('/contacts', { method: 'POST', body });
         toast('Contact added.');
       }
       closeModal();
-      loadContacts(); // refresh the list
+      loadContacts(); 
     } catch (err) {
       toast(err.message, 'error');
     }
   });
 
-  // --- Load and draw all contacts ---
+  
   async function loadContacts() {
     try {
       const data = await apiFetch('/contacts');
       const contacts = data.contacts;
 
       if (contacts.length === 0) {
-        // Friendly empty state when the user has no contacts yet.
+        
         grid.innerHTML = `
           <div class="glass empty-state" style="grid-column: 1 / -1;">
             <div class="ico">👥</div>
@@ -74,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Build a card for each contact. escapeHtml keeps it safe.
+      
       grid.innerHTML = contacts
         .map(
           (c) => `
@@ -90,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         )
         .join('');
 
-      // Wire up the Edit buttons we just created.
+      
       grid.querySelectorAll('[data-edit]').forEach((btn) => {
         btn.addEventListener('click', () => {
           const c = contacts.find((x) => x.id === btn.dataset.edit);
@@ -103,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
 
-      // Wire up the Delete buttons.
+    
       grid.querySelectorAll('[data-delete]').forEach((btn) => {
         btn.addEventListener('click', async () => {
           if (!confirm('Delete this contact?')) return;
@@ -121,6 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // First load when the page opens.
+  
   loadContacts();
 });
