@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emergency Contacts — SheShield</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="blob one"></div>
+  <div class="blob two"></div>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><span class="logo">🛡️</span> SheShield</div>
+      <a class="side-link" href="dashboard.html"><span class="ico">📊</span> Dashboard</a>
+      <a class="side-link active" href="contacts.html"><span class="ico">👥</span> Contacts</a>
+      <a class="side-link" href="sos.html"><span class="ico">🆘</span> SOS</a>
+      <a class="side-link" href="tips.html"><span class="ico">💡</span> Safety Tips</a>
+      <div class="spacer"></div>
+      <a class="side-link" href="#" id="logoutBtn"><span class="ico">🚪</span> Log Out</a>
+    </aside>
+
+    <main class="content">
+      <div class="mobile-bar">
+        <div class="brand" style="font-size: 1.2rem;"><span class="logo">🛡️</span> SheShield</div>
+        <button class="hamburger" id="hamburger">☰</button>
+      </div>
+
+      <div class="page-head">
+        <div>
+          <h1>Emergency Contacts</h1>
+          <p class="muted">The people who will be alerted when you need help.</p>
+        </div>
+        <button class="btn" id="addBtn">+ Add Contact</button>
+      </div>
+
+      <!-- Cards injected by js/contacts.js -->
+      <div class="contacts-grid" id="contactsGrid"></div>
+    </main>
+  </div>
+
+  <!-- Add / Edit modal (shared) -->
+  <div class="modal-overlay" id="contactModal">
+    <div class="glass modal">
+      <h3 id="modalTitle">Add Contact</h3>
+      <p class="sub">Enter the contact's details below.</p>
+      <form id="contactForm" novalidate>
+        <div class="field">
+          <label for="cName">Name</label>
+          <input type="text" id="cName" name="name" placeholder="Mom" required />
+        </div>
+        <div class="field">
+          <label for="cRel">Relationship</label>
+          <input type="text" id="cRel" name="relationship" placeholder="Mother, Friend, Sister…" required />
+        </div>
+        <div class="field">
+          <label for="cPhone">Phone Number</label>
+          <input type="tel" id="cPhone" name="phone" placeholder="+1 555 123 4567" required />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn ghost" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/common.js"></script>
+  <script src="js/contacts.js"></script>
+</body>
+</html>
