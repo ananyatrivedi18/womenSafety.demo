@@ -1,19 +1,10 @@
-// ===========================================================================
-// js/common.js — shared helpers loaded by every page.
-// ---------------------------------------------------------------------------
-// Keeping these in one place avoids copy-pasting the same code into auth.js,
-// dashboard.js, contacts.js and sos.js. It handles: talking to the API,
-// storing the JWT token, showing toast messages, the logout button, the
-// mobile sidebar toggle, and a "kick out if not logged in" guard.
-// ===========================================================================
 
-// Because the backend ALSO serves the frontend, API calls can be relative
-// ("/api/..."). The browser sends them to the same host:port automatically.
+
+
 const API_BASE = '/api';
 
-// --- Token storage ---------------------------------------------------------
-// We keep the JWT in localStorage so it survives page reloads. On every
-// protected request we send it back in the Authorization header.
+// --- Token storage
+
 const Auth = {
   getToken() { return localStorage.getItem('sheshield_token'); },
   setToken(t) { localStorage.setItem('sheshield_token', t); },
@@ -29,10 +20,7 @@ const Auth = {
   isLoggedIn() { return !!this.getToken(); },
 };
 
-// --- One helper for every API call -----------------------------------------
-// Usage: const data = await apiFetch('/contacts', { method: 'POST', body: {...} });
-// It automatically: adds JSON headers, attaches the token, parses the JSON
-// response, and throws an Error (with the server message) on failure.
+
 async function apiFetch(path, options = {}) {
   const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
 
@@ -46,12 +34,12 @@ async function apiFetch(path, options = {}) {
     body: options.body ? JSON.stringify(options.body) : undefined,
   });
 
-  // Try to read JSON even on errors so we can show the server's message.
+  
   let data = {};
   try { data = await res.json(); } catch (_) { /* no JSON body */ }
 
   if (!res.ok) {
-    // If the token expired, send the user back to login.
+    
     if (res.status === 401 && Auth.isLoggedIn()) {
       Auth.clear();
       window.location.href = 'login.html';
@@ -61,8 +49,7 @@ async function apiFetch(path, options = {}) {
   return data;
 }
 
-// --- Toast notifications ---------------------------------------------------
-// Pops a small message in the top-right corner that fades away.
+// --- Toast notifications --
 function toast(message, type = 'success') {
   let stack = document.querySelector('.toast-stack');
   if (!stack) {
@@ -82,8 +69,8 @@ function toast(message, type = 'success') {
   }, 3200);
 }
 
-// --- Security helper: escape user text before putting it in HTML -----------
-// This prevents a contact named "<script>..." from running as code (XSS).
+// --- Security helper
+
 function escapeHtml(str) {
   return String(str)
     .replace(/&/g, '&amp;')
@@ -93,9 +80,8 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
-// --- Route guard for protected pages ---------------------------------------
-// Call this at the top of dashboard/contacts/sos/tips scripts. If there is no
-// token, the user is redirected to the login page.
+// --- Route guard for protected pages 
+
 function requireAuth() {
   if (!Auth.isLoggedIn()) {
     window.location.href = 'login.html';
@@ -104,7 +90,7 @@ function requireAuth() {
   return true;
 }
 
-// --- Wire up shared UI bits when the page loads ----------------------------
+//  Wire up shared UI bits when the page loads 
 document.addEventListener('DOMContentLoaded', () => {
   // Logout buttons (any element with id="logoutBtn").
   const logoutBtn = document.getElementById('logoutBtn');
