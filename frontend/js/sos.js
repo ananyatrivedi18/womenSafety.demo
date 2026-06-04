@@ -1,12 +1,4 @@
-// ===========================================================================
-// js/sos.js — the emergency SOS button, confirmation popup, and history.
-// ---------------------------------------------------------------------------
-// Flow when the big red button is pressed:
-//   1. Show a confirmation modal ("Are you sure?").
-//   2. On confirm, optionally grab the browser's GPS location.
-//   3. POST the alert to /api/sos.
-//   4. Reload and show the updated alert history.
-// ===========================================================================
+
 
 document.addEventListener('DOMContentLoaded', () => {
   if (!requireAuth()) return;
@@ -17,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const cancelBtn = document.getElementById('cancelSos');
   const historyEl = document.getElementById('sosHistory');
 
-  // Pressing the big button just opens the confirmation popup.
+  
   sosBtn.addEventListener('click', () => modal.classList.add('open'));
 
   cancelBtn.addEventListener('click', () => modal.classList.remove('open'));
@@ -25,12 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target === modal) modal.classList.remove('open');
   });
 
-  // Confirm -> actually send the alert.
+  
   confirmBtn.addEventListener('click', async () => {
     confirmBtn.disabled = true;
     confirmBtn.textContent = 'Sending…';
 
-    // Try to read GPS. This is optional and may be denied — that's fine.
+    
     const location = await getLocation();
 
     try {
@@ -49,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Wrap the callback-based geolocation API in a Promise so we can await it.
+  
   function getLocation() {
     return new Promise((resolve) => {
       if (!navigator.geolocation) return resolve('Location not supported');
