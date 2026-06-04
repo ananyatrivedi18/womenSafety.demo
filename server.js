@@ -37,6 +37,6 @@ function nextId() {
 
 module.exports = { store, nextId };
 const authRoutes = require('./auth');
-const contactsRoutes = require('./routes/contacts');
-const sosRoutes = require('./routes/sos');
+const contactsRoutes = require('./contacts');
+const sosRoutes = require('./sos');
 const authMiddleware = require('./middleware/auth');
