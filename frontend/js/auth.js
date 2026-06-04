@@ -1,9 +1,7 @@
-// ===========================================================================
+
 // js/auth.js — handles the Login and Register forms.
-// ---------------------------------------------------------------------------
-// This one file is loaded by BOTH login.html and register.html. It checks
-// which form is present on the page and wires up only that one.
-// ===========================================================================
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
   // If the user is ALREADY logged in, skip the auth pages and go to dashboard.
@@ -15,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('loginForm');
   const registerForm = document.getElementById('registerForm');
 
-  // ---------------- LOGIN ----------------
+  //  LOGIN 
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault(); // stop the browser's default page reload
@@ -44,14 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ---------------- REGISTER ----------------
+  //  REGISTER 
   if (registerForm) {
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const btn = registerForm.querySelector('button[type="submit"]');
 
-      // Quick client-side check so the user gets instant feedback.
+      
       if (registerForm.password.value !== registerForm.confirmPassword.value) {
         toast('Passwords do not match.', 'error');
         return;
@@ -67,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
           confirmPassword: registerForm.confirmPassword.value,
         };
 
-        // Call POST /api/auth/register.
+        // Call POST /api/auth
         await apiFetch('/auth/register', { method: 'POST', body });
 
         toast('Account created! Please log in.');
