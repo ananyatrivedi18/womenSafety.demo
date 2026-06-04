@@ -1,121 +1,138 @@
-# 🛡️ SheShield — Women's Safety Portal
+#  SheShield – Women's Safety Portal
 
-A simple full-stack web app: **HTML + CSS + vanilla JavaScript** on the
-frontend, **Node.js + Express** on the backend, **JWT** auth with **bcrypt**
-password hashing, and **in-memory** storage (no database).
+**Made by Ananya Trivedi**
 
-> ⚠️ All data lives in server memory and is **erased when the server
-> restarts**. This is intentional — it keeps the project simple to learn.
+SheShield is a web application that I built to learn full-stack development while working on a project related to women's safety.The idea behind this project is to provide a platform where users can manage emergency contacts and quickly trigger an SOS alert during emergencies.
+
+This project uses **HTML, CSS, and JavaScript** for the frontend and **Node.js with Express.js** for the backend. User authentication is implemented using **JWT** and passwords are secured using **bcrypt**.
+
+ This project currently uses in-memory storage, so all data gets cleared whenever the server restarts. I chose this approach to keep the project simple and focus on learning backend concepts.
 
 ---
 
-## 📁 Project structure
+## Features
 
-```
+* User Registration and Login
+* Emergency Contact Management
+* SOS Alert Functionality
+* User Dashboard
+* Safety Tips Section
+
+---
+
+## Tech Stack
+
+### Frontend
+
+* HTML
+* CSS
+* JavaScript
+
+### Backend
+
+* Node.js
+* Express.js
+
+### Authentication
+
+* JWT (JSON Web Token)
+* Bcrypt
+
+---
+
+## Project Structure
+
+```text
 SheShield/
 ├── frontend/
-│   ├── index.html        Home / landing page
-│   ├── login.html        Login page
-│   ├── register.html     Register page
-│   ├── dashboard.html    Dashboard (protected)
-│   ├── contacts.html     Emergency contacts (protected)
-│   ├── sos.html          SOS button + history (protected)
-│   ├── tips.html         Safety tips (protected)
-│   ├── css/style.css     All styling (purple/pink glassmorphism)
-│   └── js/
-│       ├── common.js     Shared helpers: API calls, token, toasts, sidebar
-│       ├── auth.js       Login + register form logic
-│       ├── dashboard.js  Loads user info and counts
-│       ├── contacts.js   Add / edit / delete contacts
-│       └── sos.js        SOS confirmation + alert history
-└── backend/
-    ├── server.js         Express entry point (also serves the frontend)
-    ├── package.json      Dependencies + scripts
-    ├── .env.example      Copy to .env and fill in
-    ├── data/store.js     In-memory "database"
-    ├── middleware/auth.js JWT verification middleware
-    └── routes/
-        ├── auth.js       /api/auth/register, /login, /me
-        ├── contacts.js   /api/contacts CRUD
-        └── sos.js        /api/sos create + list
+│   ├── HTML Pages
+│   ├── CSS
+│   └── JavaScript Files
+│
+├── backend/
+│   ├── Routes
+│   ├── Middleware
+│   ├── Data Storage
+│   └── Server Setup
+│
+└── README.md
 ```
 
 ---
 
-## 🚀 Setup & run
+## How to Run the Project
 
-You need **Node.js 18+** installed.
+### 1. Go to the backend folder
 
 ```bash
-# 1. Go into the backend folder
 cd SheShield/backend
+```
 
-# 2. Install dependencies
+### 2. Install dependencies
+
+```bash
 npm install
-
-# 3. Create your .env file from the example, then open it and set a secret
-cp .env.example .env        # (Windows: copy .env.example .env)
-
-# 4. Start the server
-npm start                   # or: npm run dev  (auto-restarts on changes)
 ```
 
-Then open your browser at:
+### 3. Create a .env file
 
+Copy the example file and add your secret key.
+
+```bash
+cp .env.example .env
 ```
+
+### 4. Start the server
+
+```bash
+npm start
+```
+
+or
+
+```bash
+npm run dev
+```
+
+Open:
+
+```text
 http://localhost:5000
 ```
 
-That single server serves **both** the API and the website, so there is
-nothing else to start.
+in your browser.
 
 ---
 
-## 🔌 How the frontend talks to the backend
+## What I Learned
 
-1. **Same origin.** `server.js` serves the `frontend/` folder as static files.
-   So the website and the API share `http://localhost:5000`. The frontend can
-   therefore use **relative** URLs like `/api/contacts` (see `API_BASE` in
-   `common.js`).
+While building this project, I learned:
 
-2. **Fetch.** Every request goes through the `apiFetch()` helper in
-   `common.js`, which uses the browser's `fetch()` to send/receive **JSON**.
-
-3. **The JWT token.** On login, the backend returns a signed token. The
-   frontend stores it in `localStorage` and attaches it to every protected
-   request in the header:
-
-   ```
-   Authorization: Bearer <token>
-   ```
-
-4. **The middleware.** `middleware/auth.js` reads that header, verifies the
-   token, and sets `req.userId`. Routes then use `req.userId` to return only
-   that user's data. If the token is missing/expired, the API responds `401`
-   and the frontend sends the user back to `login.html`.
-
-### API reference
-
-| Method | Endpoint              | Auth | Purpose                  |
-|--------|-----------------------|------|--------------------------|
-| POST   | `/api/auth/register`  | No   | Create an account        |
-| POST   | `/api/auth/login`     | No   | Log in, returns a token  |
-| GET    | `/api/auth/me`        | Yes  | Current user details     |
-| GET    | `/api/contacts`       | Yes  | List your contacts       |
-| POST   | `/api/contacts`       | Yes  | Add a contact            |
-| PUT    | `/api/contacts/:id`   | Yes  | Update a contact         |
-| DELETE | `/api/contacts/:id`   | Yes  | Delete a contact         |
-| POST   | `/api/sos`            | Yes  | Record an SOS alert      |
-| GET    | `/api/sos`            | Yes  | List your SOS alerts     |
+* How frontend and backend communicate using APIs
+* Creating REST APIs with Express.js
+* User authentication using JWT
+* Password hashing with bcrypt
+* Managing user data and requests
+* Structuring a full-stack project
 
 ---
 
-## 🧪 Try it
+## Future Improvements
 
-1. Open `http://localhost:5000`, click **Get Started**, register.
-2. Log in. You land on the dashboard.
-3. Add a few emergency contacts.
-4. Go to **SOS**, press the red button, confirm — see it appear in history.
-5. Refresh the dashboard: the counts update.
+Some features I would like to add in the future:
 
-Enjoy, and stay safe! 🛡️💜
+* Database integration using MongoDB
+* Real-time location sharing
+* SMS and email alerts
+* Live emergency tracking
+* Mobile-friendly enhancements
+
+---
+
+## About Me
+
+Hi,I'm **Ananya Trivedi**, a B.Tech Computer Science student who is currently learning Data Structures, Web Development, and Backend Development.I built this project to improve my full-stack development skills and gain hands-on experience with authentication and API development.
+
+Thank you for checking out my project!
+
+
