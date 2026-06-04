@@ -1,126 +1,42 @@
 // ===========================================================================
-// js/contacts.js — list / add / edit / delete emergency contacts.
+// middleware/auth.js
 // ---------------------------------------------------------------------------
-// Uses a single modal (popup) for BOTH adding and editing. When editing we
-// remember the contact id in `editingId`; when adding it stays null.
+// "Middleware" in Express is a function that runs BEFORE your route handler.
+// This middleware protects private routes: it checks that the request carries
+// a valid JWT (JSON Web Token). If the token is good, it attaches the user's
+// id to `req.userId` and calls next() so the route can continue. If not, it
+// stops the request with a 401 (Unauthorized) error.
 // ===========================================================================
 
-let editingId = null; // null = adding new, otherwise = id we are editing
+const jwt = require('jsonwebtoken');
 
-document.addEventListener('DOMContentLoaded', () => {
-  if (!requireAuth()) return;
+function authMiddleware(req, res, next) {
+  // The frontend sends the token in the HTTP header:
+  //   Authorization: Bearer <token>
+  const authHeader = req.headers['authorization'] || '';
 
-  // Grab the elements we will reuse.
-  const grid = document.getElementById('contactsGrid');
-  const modal = document.getElementById('contactModal');
-  const form = document.getElementById('contactForm');
-  const modalTitle = document.getElementById('modalTitle');
+  // Split "Bearer <token>" into two parts and take the token part.
+  const token = authHeader.startsWith('Bearer ')
+    ? authHeader.slice(7) // remove the first 7 characters: "Bearer "
+    : null;
 
-  // --- Open the modal for ADDING ---
-  document.getElementById('addBtn').addEventListener('click', () => {
-    editingId = null;
-    modalTitle.textContent = 'Add Contact';
-    form.reset();
-    modal.classList.add('open');
-  });
-
-  // --- Close the modal (Cancel button or clicking the dark backdrop) ---
-  document.getElementById('cancelBtn').addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal(); // only when clicking the overlay itself
-  });
-  function closeModal() { modal.classList.remove('open'); }
-
-  // --- Save (create or update) ---
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const body = {
-      name: form.name.value,
-      relationship: form.relationship.value,
-      phone: form.phone.value,
-    };
-
-    try {
-      if (editingId) {
-        // PUT /api/contacts/:id
-        await apiFetch(`/contacts/${editingId}`, { method: 'PUT', body });
-        toast('Contact updated.');
-      } else {
-        // POST /api/contacts
-        await apiFetch('/contacts', { method: 'POST', body });
-        toast('Contact added.');
-      }
-      closeModal();
-      loadContacts(); // refresh the list
-    } catch (err) {
-      toast(err.message, 'error');
-    }
-  });
-
-  // --- Load and draw all contacts ---
-  async function loadContacts() {
-    try {
-      const data = await apiFetch('/contacts');
-      const contacts = data.contacts;
-
-      if (contacts.length === 0) {
-        // Friendly empty state when the user has no contacts yet.
-        grid.innerHTML = `
-          <div class="glass empty-state" style="grid-column: 1 / -1;">
-            <div class="ico">👥</div>
-            <h3>No emergency contacts yet</h3>
-            <p>Add the people you trust most so they are one tap away.</p>
-          </div>`;
-        return;
-      }
-
-      // Build a card for each contact. escapeHtml keeps it safe.
-      grid.innerHTML = contacts
-        .map(
-          (c) => `
-        <div class="glass contact-card">
-          <h3>${escapeHtml(c.name)}</h3>
-          <span class="rel">${escapeHtml(c.relationship)}</span>
-          <p class="phone">📞 ${escapeHtml(c.phone)}</p>
-          <div class="actions">
-            <button class="btn ghost small" data-edit="${c.id}">Edit</button>
-            <button class="btn danger small" data-delete="${c.id}">Delete</button>
-          </div>
-        </div>`
-        )
-        .join('');
-
-      // Wire up the Edit buttons we just created.
-      grid.querySelectorAll('[data-edit]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const c = contacts.find((x) => x.id === btn.dataset.edit);
-          editingId = c.id;
-          modalTitle.textContent = 'Edit Contact';
-          form.name.value = c.name;
-          form.relationship.value = c.relationship;
-          form.phone.value = c.phone;
-          modal.classList.add('open');
-        });
-      });
-
-      // Wire up the Delete buttons.
-      grid.querySelectorAll('[data-delete]').forEach((btn) => {
-        btn.addEventListener('click', async () => {
-          if (!confirm('Delete this contact?')) return;
-          try {
-            await apiFetch(`/contacts/${btn.dataset.delete}`, { method: 'DELETE' });
-            toast('Contact deleted.');
-            loadContacts();
-          } catch (err) {
-            toast(err.message, 'error');
-          }
-        });
-      });
-    } catch (err) {
-      toast(err.message, 'error');
-    }
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided. Please log in.' });
   }
 
-  // First load when the page opens.
-  loadContacts();
-});
+  try {
+    // jwt.verify throws if the token is invalid or expired.
+    // The decoded payload contains whatever we put in at login time (the id).
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Make the user id available to every route that runs after this.
+    req.userId = decoded.id;
+
+    // Hand control to the next middleware / route handler.
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: 'Invalid or expired token. Please log in again.' });
+  }
+}
+
+module.exports = authMiddleware;
