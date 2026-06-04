@@ -1,23 +1,8 @@
-/* =========================================================================
-   style.css — SheShield global styles
-   -------------------------------------------------------------------------
-   One stylesheet shared by every page. Organised top to bottom:
-     1. Design tokens (CSS variables)
-     2. Base / reset
-     3. Decorative animated background
-     4. Buttons & form controls
-     5. Glassmorphism cards
-     6. Public layout (home / auth pages)
-     7. App layout (sidebar + main content)
-     8. Page-specific pieces (dashboard, contacts, sos, tips)
-     9. Toast notifications & modal
-    10. Responsive (mobile) rules
-   ========================================================================= */
+/* 
+   style.css — SheShield global styles */
+   
 
-/* Distinctive fonts: "Fraunces" (characterful serif) for display headings,
-   "Outfit" (clean geometric sans) for body text. Loaded in each HTML head. */
-
-/* ---------- 1. Design tokens ---------- */
+/*   Design tokens  */
 :root {
   --purple-900: #2b0f45;
   --purple-700: #5b21b6;
@@ -43,7 +28,7 @@
   --transition: 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ---------- 2. Base / reset ---------- */
+/*   Base   */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
@@ -61,7 +46,7 @@ h1, h2, h3, h4 { font-family: "Fraunces", Georgia, serif; line-height: 1.15; fon
 
 a { color: var(--pink-400); text-decoration: none; }
 
-/* ---------- 3. Decorative animated background blobs ---------- */
+/*   Decorative animated background  */
 .blob {
   position: fixed;
   border-radius: 50%;
@@ -79,7 +64,7 @@ a { color: var(--pink-400); text-decoration: none; }
   50%      { transform: translate(30px, -40px) scale(1.08); }
 }
 
-/* ---------- 4. Buttons & form controls ---------- */
+/*   Buttons & form controls  */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -130,7 +115,7 @@ input:focus, select:focus, textarea:focus {
 }
 .field { margin-bottom: 18px; }
 
-/* ---------- 5. Glassmorphism card ---------- */
+/*  Glassmorphism card  */
 .glass {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
@@ -140,7 +125,7 @@ input:focus, select:focus, textarea:focus {
   box-shadow: var(--glass-shadow);
 }
 
-/* ---------- 6. Public layout (home / login / register) ---------- */
+/*  (home / login / register)  */
 .topbar {
   display: flex;
   align-items: center;
@@ -191,14 +176,14 @@ input:focus, select:focus, textarea:focus {
 .feature-card h3 { font-size: 1.2rem; margin-bottom: 6px; }
 .feature-card p { color: var(--text-dim); font-size: 0.95rem; }
 
-/* Auth (login/register) centred card */
+/*  (login/register)  */
 .auth-wrap { min-height: 78vh; display: grid; place-items: center; padding: 30px 18px; }
 .auth-card { width: 100%; max-width: 440px; padding: 38px; }
 .auth-card h2 { font-size: 1.9rem; margin-bottom: 6px; }
 .auth-card .sub { color: var(--text-dim); margin-bottom: 24px; }
 .auth-card .switch { text-align: center; margin-top: 18px; color: var(--text-dim); font-size: 0.92rem; }
 
-/* ---------- 7. App layout (sidebar + content) ---------- */
+/*   App layout  */
 .app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
 
 .sidebar {
@@ -241,7 +226,7 @@ input:focus, select:focus, textarea:focus {
 }
 .hamburger { font-size: 1.5rem; background: none; border: none; color: var(--text); cursor: pointer; }
 
-/* ---------- 8. Page-specific pieces ---------- */
+/*  Page-specific pieces  */
 /* Dashboard stat cards */
 .welcome-card { padding: 30px; margin-bottom: 26px; display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
 .welcome-card .avatar {
@@ -311,7 +296,7 @@ input:focus, select:focus, textarea:focus {
 .tip-card p { color: var(--text-dim); font-size: 0.95rem; }
 .tip-card .num-badge { position: absolute; top: 14px; right: 18px; font-family: "Fraunces", serif; font-size: 2.4rem; opacity: 0.12; }
 
-/* ---------- 9. Toast & modal ---------- */
+/*  Toast & modal - */
 .toast-stack { position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
 .toast {
   padding: 14px 20px; border-radius: 12px; color: #fff; font-weight: 500;
@@ -334,7 +319,7 @@ input:focus, select:focus, textarea:focus {
 .modal .sub { color: var(--text-dim); margin-bottom: 20px; }
 .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 22px; }
 
-/* ---------- 10. Responsive ---------- */
+/*   Responsive */
 @media (max-width: 860px) {
   .hero { grid-template-columns: 1fr; text-align: center; }
   .hero p { margin-inline: auto; }
